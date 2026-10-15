@@ -3,26 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COS CON - toys &amp; costumes</title>
-  <link rel="stylesheet" href="style.css">
+  <title>COS CON - toys & costumes</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated Backdrop Grid */
+    .background-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .box {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      animation: float-around 25s infinite linear;
+    }
+
+    .box:nth-child(1) { width: 80px;  height: 80px;  left: 10%;  top: 20%;    background: rgba(255, 0, 128, 0.15); border-color: rgba(255, 0, 128, 0.4); animation-duration: 20s; }
+    .box:nth-child(2) { width: 120px; height: 120px; right: 15%; top: 10%;     background: rgba(0, 255, 255, 0.15); border-color: rgba(0, 255, 255, 0.4); animation-duration: 30s; animation-delay: -5s; }
+    .box:nth-child(3) { width: 60px;  height: 60px;  left: 25%;  bottom: 15%;  background: rgba(255, 255, 0, 0.15); border-color: rgba(255, 255, 0, 0.4); animation-duration: 18s; animation-delay: -2s; }
+    .box:nth-child(4) { width: 100px; height: 100px; right: 25%; bottom: 20%;  background: rgba(0, 255, 128, 0.15); border-color: rgba(0, 255, 128, 0.4); animation-duration: 26s; animation-delay: -8s; }
+    .box:nth-child(5) { width: 70px;  height: 70px;  left: 45%;  top: 40%;     background: rgba(128, 0, 255, 0.15); border-color: rgba(128, 0, 255, 0.4); animation-duration: 22s; animation-delay: -12s; }
+
+    @keyframes float-around {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      50%  { transform: translate(30px, -50px) rotate(180deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    body.paused .box { animation-play-state: paused; }
+
+    .motion-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 3;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .motion-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+    .hub-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 450px;
+      padding: 2rem 1.25rem;
+      text-align: center;
+    }
+
+    .header-title {
+      font-size: 2.6rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #ffd400, #ff2e63, #00e5ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.1;
+    }
+
+    .tagline {
+      margin-top: 8px;
+      font-size: 1.1rem;
+      color: #00e5ff;
+      letter-spacing: 0.08em;
+    }
+
+    .header-panel { margin-bottom: 2.25rem; }
+
+    .link-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60px;
+      padding: 1rem;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: #111;
+      color: #fff;
+      border: 2px solid #222;
+      box-shadow: 0 4px 0 #000;
+    }
+    .link-btn:hover,
+    .link-btn:focus-visible {
+      transform: translateY(-3px);
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+    .link-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #000; }
+
+    .link-btn.shop      { background: #ff0055; border-color: #ff3377; color: #fff; box-shadow: 0 6px 0 #990033; }
+    .link-btn.instagram { border-color: #e1306c; }
+    .link-btn.youtube   { border-color: #ff0000; }
+    .link-btn.facebook  { border-color: #1877f2; }
+
+    .disclosure {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: #b0b0bd;
+    }
+
+    /* Reduce motion: stop the background and hide the pause button */
+    @media (prefers-reduced-motion: reduce) {
+      .box { animation: none; }
+      .motion-toggle { display: none; }
+    }
+  </style>
 </head>
 <body>
-  <main class="wrap">
-    <header>
-      <h1>COS CON</h1>
+
+  <div class="background-canvas" aria-hidden="true">
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+  </div>
+
+  <button type="button" class="motion-toggle" id="motion-toggle" aria-pressed="false" aria-label="Pause background motion">Pause</button>
+
+  <main class="hub-container">
+    <header class="header-panel">
+      <h1 class="header-title">COS CON</h1>
       <p class="tagline">toys &amp; costumes</p>
     </header>
 
-    <nav class="links" aria-label="Shop and social links">
-      <a class="btn btn-shop" href="https://amzn.to/4zyQ4lg" target="_blank" rel="noopener noreferrer">Shop Toys &amp; Costumes</a>
-      <a class="btn btn-ig" href="https://www.instagram.com/cos__con" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a class="btn btn-yt" href="https://www.youtube.com/@Cos-ConInternational" target="_blank" rel="noopener noreferrer">YouTube</a>
-      <a class="btn btn-fb" href="https://www.facebook.com/CosCon.Intl" target="_blank" rel="noopener noreferrer">Facebook</a>
+    <nav class="link-stack" aria-label="Shop and social links">
+      <a class="link-btn shop" href="https://amzn.to/4zyQ4lg" target="_blank" rel="noopener noreferrer">Shop Toys &amp; Costumes</a>
+      <a class="link-btn instagram" href="https://www.instagram.com/cos__con/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a class="link-btn youtube" href="https://www.youtube.com/@Cos-ConInternational" target="_blank" rel="noopener noreferrer">YouTube</a>
+      <a class="link-btn facebook" href="https://www.facebook.com/CosCon.Intl" target="_blank" rel="noopener noreferrer">Facebook</a>
     </nav>
 
-    <footer>
-      <p class="disclosure">As an Amazon Associate I earn from qualifying purchases.</p>
-    </footer>
+    <p class="disclosure">As an Amazon Associate I earn from qualifying purchases.</p>
   </main>
+
+  <script>
+    const toggle = document.getElementById('motion-toggle');
+    toggle.addEventListener('click', () => {
+      const paused = document.body.classList.toggle('paused');
+      toggle.textContent = paused ? 'Play' : 'Pause';
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
+    });
+  </script>
+
 </body>
 </html>
